@@ -4,6 +4,9 @@ const issueBookRouter=require('./src/routes/IssueBookRouter');
 const db=require('./src/config/db');
 require('dotenv').config();
 const app=express();
+app.use(express.json()); 
+
+
 
 
 

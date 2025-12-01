@@ -29,55 +29,51 @@ const getBookById=async (req,res)=>{
 
 }
 
-const createBook=(req,res)=>{
-    try{
-        const { title,author,publishedYear,price,quantity}=req.body;
-        if(!title || !author || !publishedYear || !price || !quantity)
-        {
-            return res.status(400).send('please provide all the feilds');
+const createBook = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { title, author, publishedYear, price, quantity } = req.body;
+        if (!title || !author || !publishedYear || !price || !quantity) {
+            return res.status(400).json({ message: 'please provide all the fields' });
         }
-        const newBook={
-            id:books.length+1,
+
+        const book = new Book({
             title,
             author,
             publishedYear,
             price,
             quantity,
-            status:'Available'
-        }
-        books.push(newBook);
-        res.status(201).send(newBook);
+            status: "AVAILABLE"
+        });
+
+        const savedBook = await book.save();
+        res.status(201).json(savedBook);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    catch(error)
-    {
-        res.status(500).json({message:error.message})
-    }
-}
+};
 
-const updateBook=async(req,res)=>{
-    try{
-        const book=await Book.findById(req.params.id);
-        if(!book){
-            return res.status(404).json({message:"Book Not Found"});
-        }
-
-        const {title,author,publishedYear,price,quantity}=req.body;
-
-        if(!title || !author || !publishedYear || !price || !quantity)
-        {
-            return res.status(400).send('please provide all the feilds');
+const updateBook = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ message: "Book Not Found" });
         }
 
-        book.title=title;
-        book.author=author;
-        book.publishedYear=publishedYear;
-        book.price=price;
-        book.quantity=quantity;
-        res.status(200).json({message:"Book Updated SuccessFully",data:book});
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
+        const { title, author, publishedYear, price, quantity, status } = req.body;
+
+        // Allow partial updates
+        if (title !== undefined) book.title = title;
+        if (author !== undefined) book.author = author;
+        if (publishedYear !== undefined) book.publishedYear = publishedYear;
+        if (price !== undefined) book.price = price;
+        if (quantity !== undefined) book.quantity = quantity;
+        if (status !== undefined) book.status = status;
+
+        const updatedBook = await book.save();
+        res.status(200).json({ message: "Book Updated Successfully", data: updatedBook });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 

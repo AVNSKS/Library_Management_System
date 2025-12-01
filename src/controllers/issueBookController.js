@@ -6,12 +6,12 @@ const User=require('../models/User');
 issueBook=async (req,res)=>{
     try{
         const {bookId,bookName,studentId,studentName,issueDate,returnDate}=req.body;
-        const book=await User.findbyId(bookId);
+        const book=await Book.findById(bookId);
         if(!book)
         {
             return res.send(404).json({message:'Book not found'});
         }
-        const student=await User.findbyId(studentId);
+        const student=await User.findById(studentId);
         if(!student){
             return res.send(404).json({message:'Student not Found'});
         }

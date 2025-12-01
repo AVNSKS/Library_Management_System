@@ -27,8 +27,8 @@ const bookSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['available', 'not available'],
-        default: 'available'
+        enum: ["AVAILABLE", "NOT-AVAILABLE"],
+        default: "AVAILABLE"
     },
     createdAt:{
         type:Date,
