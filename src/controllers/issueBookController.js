@@ -3,40 +3,39 @@ const IssueBook=require('../models/IssueBook');
 const Book=require('../models/Books');
 const User=require('../models/User');
 
-issueBook=async (req,res)=>{
-    try{
-        const {bookId,bookName,studentId,studentName,issueDate,returnDate}=req.body;
-        const book=await Book.findById(bookId);
-        if(!book)
-        {
-            return res.send(404).json({message:'Book not found'});
+const issueBook = async (req, res) => {
+    try {
+        const {bookId, bookName, studentId, studentName, issueDate, returnDate} = req.body;
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).json({message: 'Book not found'});
         }
-        const student=await User.findById(studentId);
-        if(!student){
-            return res.send(404).json({message:'Student not Found'});
+        const student = await User.findById(studentId);
+        if (!student) {
+            return res.status(404).json({message: 'Student not Found'});
         }
-        if(book.quantity<1)
-        {
-            return res.send(404).json({message:'Book is not available'});
+        if (book.quantity < 1) {
+            return res.status(404).json({message: 'Book is not available'});
         }
-        const newIssueBook={
+        const newIssueBook = {
             bookId,
             bookName,
             studentId,
             studentName,
             issueDate,
             returnDate,
-            status:"ISSUED"
+            status: "ISSUED",
+            createdAt: new Date()
         };
-        const issueBook=new IssueBook(newIssueBook);
+        const issueBook = new IssueBook(newIssueBook);
         await issueBook.save();
 
-        book.quantity=book.quality-1;
-        responce.status(201).json({message:'book was issued',data:issueBook});
-    }
-    catch(Error){
-        res.status(500).json({message:Error.message});
+        book.quantity = book.quantity - 1;
+        await book.save();
 
+        res.status(201).json({message: 'book was issued', data: issueBook});
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 };
 

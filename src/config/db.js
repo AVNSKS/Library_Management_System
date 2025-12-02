@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 
-mongoose.connect('mongodb+srv://Library_Management:Siva__2006@cluster0.xkd93dw.mongodb.net/?appName=Cluster0');
+mongoose.connect('mongodb://127.0.0.1:27017/library_management');
 
 const db=mongoose.connection;
 
