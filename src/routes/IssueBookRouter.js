@@ -1,9 +1,10 @@
-const express=require('express');
-const {issueBook,returnbook}=require('../controllers/issueBookController');
+const express = require('express');
+const authMiddleWare = require('../../middleWare/authMiddleWare');
+const { issueBook, returnbook } = require('../controllers/issueBookController');
 
-const router=express.Router();
+const router = express.Router();
 
-router.post('/',issueBook);
-router.put('/:id',returnbook);
+router.post('/', authMiddleWare, issueBook);
+router.put('/:id', authMiddleWare, returnbook);
 
-module.exports=router;
+module.exports = router;
